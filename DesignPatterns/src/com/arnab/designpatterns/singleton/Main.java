@@ -1,11 +1,34 @@
 package com.arnab.designpatterns.singleton;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        exampleSerialization();
+    public static void main(String[] args) throws IOException, ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        //exampleSerialization();
+        exampleReflection();
+    }
+
+    private static void exampleReflection() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+
+        //using Reflection we are invoking the declared constructor
+        // and setting the accessibility to true
+        Constructor[] constructors=LazySingleton.class.getDeclaredConstructors();
+        Constructor constructor=constructors[0];
+        constructor.setAccessible(true);
+
+        LazySingleton lazySingleton= (LazySingleton) constructor.newInstance();
+        LazySingleton instance=LazySingleton.getInstance();
+
+        System.out.println("Reflected singleton hashcode :: "+lazySingleton.hashCode());
+        System.out.println("Singleton instance hashcode :: "+instance.hashCode());
+
+        //All the solution using EnumSingleton
+
+        EnumSingleton enumSingletonInstance=EnumSingleton.INSTANCE;
+        System.out.println("Enum singleton instance hashcode :: "+enumSingletonInstance.hashCode());
     }
 
     private static void exampleSerialization() throws IOException, ClassNotFoundException {
